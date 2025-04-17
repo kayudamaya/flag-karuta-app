@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -7,98 +6,191 @@
   <title>世界の国旗かるた</title>
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Kirakira', 'Segoe UI', sans-serif;
       text-align: center;
-      background-color: #f0f8ff;
+      background: linear-gradient(to bottom, #ffe7f0, #ffffff);
       padding: 2em;
+      color: #333;
+    }
+    h1 {
+      font-size: 2.8em;
+      color: #ff4081;
+      margin-bottom: 1em;
+      text-shadow: 2px 2px #ffc1e3;
     }
     #card {
       font-size: 2em;
-      margin: 1em;
+      margin: 1em auto;
       padding: 1em;
-      border: 3px solid #333;
-      background: #fff;
-      border-radius: 15px;
+      max-width: 90%;
+      border: 6px dotted #ff80ab;
+      background: #fff0f5;
+      border-radius: 25px;
       min-height: 3em;
+      box-shadow: 4px 4px 10px rgba(0,0,0,0.15);
+    }
+    #flag {
+      max-width: 80%;
+      height: auto;
+      margin: 1em auto;
+      border: 5px solid #ff80ab;
+      border-radius: 20px;
+      box-shadow: 3px 3px 12px rgba(0,0,0,0.1);
     }
     button {
-      font-size: 1.5em;
-      padding: 0.5em 1.5em;
-      border-radius: 10px;
-      background-color: #4CAF50;
+      font-size: 2em;
+      padding: 0.8em 2em;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #ff8a65, #ffb74d);
       color: white;
       border: none;
       cursor: pointer;
+      transition: transform 0.1s ease-in-out, box-shadow 0.2s;
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     }
     button:hover {
-      background-color: #45a049;
+      background: linear-gradient(145deg, #ff7043, #ffa726);
+      transform: scale(1.05);
+    }
+    #end {
+      font-size: 2.5em;
+      margin-top: 2em;
+      color: #ff4081;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h1>世界の国旗かるた 読み人</h1>
+  <h1>🌟 世界の国旗かるた 🎌</h1>
   <div id="card">ボタンを押してね！</div>
-  <button onclick="readCard()">よむ！</button>
+  <img id="flag" src="" alt="国旗" style="display: none;">
+  <button id="readButton" onclick="readCard()">▶ よむ！</button>
+  <button id="autoButton" onclick="startAutoMode()" style="margin-left: 1em;">📢 ぜんぶよんで！</button>
+  <div id="end">🎉 おしまい！ぜんぶの国旗を読んだよ！</div>
+  <button id="repeatButton" onclick="restartGame()" style="display:none; margin-top: 1em;">🔁 もういちど！</button>
 
   <script>
-    const cards = [
-      "きん十字　空に輝く　スウェーデン",
-      "むかしの王　ダビデの盾は　イスラエル",
-      "緑白赤　このたて３色が　イタリアだ",
-      "ロシア国旗　オランダ国旗が　もとになり",
-      "レバノン杉　船を作って　地中かいへ",
-      "天からの　十字きが舞う　デンマーク",
-      "日の丸は　日本の国旗　日が昇る",
-      "トルコ国旗　月 星 輝く　イスラムの",
-      "モンゴルの　民族模様は　自由のしるし",
-      "槍と盾　ケニアの独立　守りぬく",
-      "中国の　赤い国旗は　星五つ",
-      "沼と湖　真っ白い雪　フィンランド",
-      "バーレーンは　ギザギザ模様で　あざやかに",
-      "パプアでは　ゴクラクチョウが　飛んでいる",
-      "目立つ赤　オーストリアは　音楽の国",
-      "雪がふる　アンデスの山　チリ国旗",
-      "ヘラクレスの　柱がたってる　スペイン国旗",
-      "イギリスは　３つの旗が　合わさった",
-      "竜が抱く　玉が輝く　ブータン国旗",
-      "聖句書き　剣を描いた　サウジアラビア",
-      "ワシがヘビ　くわえた伝説　メキシコ国旗",
-      "ギリシャ国旗　神話にもどづく　９本線",
-      "真ん中に　太陽の顔　アルゼンチン",
-      "紅白の　チェック模様が　クロアチア",
-      "波と太陽　グンカンドリの　キリバス国旗",
-      "星５０　州の数あらわす　アメリカ国旗",
-      "フィジーの　国旗に小さく　バナナあり",
-      "青空が　麦畑の上に　ウクライナ",
-      "たて３色　青白赤が　フランスだ",
-      "エクアドル　コンドルが飛ぶ　アンデスへ",
-      "月の丸　太平洋に浮かぶ　パラオの国旗",
-      "白十字　スイスの国旗が　赤十字に",
-      "建国の　理想をこめた　韓国国旗",
-      "ライオンの　紋章が始まり　ベルギー国旗",
-      "オーストラリア　コアラの国は　南十字星",
-      "スリランカ　国の名のもとは　ライオンだ",
-      "ブラジルの　緑は農業　黄色は資源",
-      "空と海　インド洋に浮かぶ　セーシェルだ",
-      "葉が赤く　染まるカエデの　カナダ国旗",
-      "ネパールの　国旗は三角　月と日と",
-      "ルワンダの　国旗は太陽　希望のしるし",
-      "ノルウェーは　北ヨーロッパ　十字架だ",
-      "横３色　赤白青は　オランダだ",
-      "三色の　統一ドイツ　黒赤金",
-      "黒い三角　南アで黒人　白人が",
-      "ニクズクの　実がかわいいな　グレナダの",
-      "カンボジア　アンコールワットは　世界遺産",
-      "ウルグアイ　９本線と　太陽と"
-    ];
+    const originalCards = [
+  { country: "スウェーデン", speak: "金十字、空に輝く。スウェーデン", display: "金十字　空に輝く　スウェーデン", flag: "https://flagcdn.com/w320/se.png" },
+  { country: "イスラエル", speak: "むかしの王、ダビデの盾は、イスラエル", display: "昔の王　ダビデの盾は　イスラエル", flag: "https://flagcdn.com/w320/il.png" },
+  { country: "イタリア", speak: "緑白赤、このたて３色が、イタリアだ", display: "緑白赤　この縦３色が　イタリアだ", flag: "https://flagcdn.com/w320/it.png" },
+  { country: "ロシア", speak: "ロシア国旗、オランダ国旗が、元になり", display: "ロシア国旗　オランダ国旗が　もとになり", flag: "https://flagcdn.com/w320/ru.png" },
+  { country: "レバノン", speak: "レバノン杉、船を作って、地中かいへ", display: "レバノン杉　船を作って　地中海へ", flag: "https://flagcdn.com/w320/lb.png" },
+  { country: "デンマーク", speak: "天からの、十字きが舞う、デンマーク", display: "天からの　十字旗が舞う　デンマーク", flag: "https://flagcdn.com/w320/dk.png" },
+  { country: "日本", speak: "日の丸は、日本の国旗、日が昇る", display: "日の丸は　日本の国旗　日が昇る", flag: "https://flagcdn.com/w320/jp.png" },
+  { country: "トルコ", speak: "トルコ国旗、月・星・輝く、イスラムの", display: "トルコ国旗　月 星 輝く　イスラムの", flag: "https://flagcdn.com/w320/tr.png" },
+  { country: "モンゴル", speak: "モンゴルの、民族模様は、自由のしるし", display: "モンゴルの　民族模様は　自由のしるし", flag: "https://flagcdn.com/w320/mn.png" },
+  { country: "ケニア", speak: "槍と盾、ケニアの独立、守りぬく", display: "槍と盾　ケニアの独立　守りぬく", flag: "https://flagcdn.com/w320/ke.png" },
+  { country: "中国", speak: "中国の、赤い国旗は、星五つ", display: "中国の　赤い国旗は　星五つ", flag: "https://flagcdn.com/w320/cn.png" },
+  { country: "フィンランド", speak: "沼と湖、真っ白い雪、フィンランド", display: "沼と湖　真っ白い雪　フィンランド", flag: "https://flagcdn.com/w320/fi.png" },
+  { country: "バーレーン", speak: "バーレーンは、ギザギザ模様で、あざやかに", display: "バーレーンは　ギザギザ模様で　あざやかに", flag: "https://flagcdn.com/w320/bh.png" },
+  { country: "パプアニューギニア", speak: "パプアでは、ゴクラクチョウが、飛んでいる", display: "パプアでは　ゴクラクチョウが　飛んでいる", flag: "https://flagcdn.com/w320/pg.png" },
+  { country: "オーストリア", speak: "目立つ赤、オーストリアは、音楽の国", display: "目立つ赤　オーストリアは　音楽の国", flag: "https://flagcdn.com/w320/at.png" },
+  { country: "チリ", speak: "雪がふる、アンデスの山、チリ 国旗", display: "雪がふる　アンデスの山　チリ国旗", flag: "https://flagcdn.com/w320/cl.png" },
+  { country: "スペイン", speak: "ヘラクレスの、柱がたってる、スペイン国旗", display: "ヘラクレスの　柱がたってる　スペイン国旗", flag: "https://flagcdn.com/w320/es.png" },
+  { country: "イギリス", speak: "イギリスは、３つの旗が、合わさった", display: "イギリスは　３つの旗が　合わさった", flag: "https://flagcdn.com/w320/gb.png" },
+  { country: "ブータン", speak: "竜が抱く、たまが輝く。ブータン国旗", display: "竜が抱く　玉が輝く　ブータン国旗", flag: "https://flagcdn.com/w320/bt.png" },
+  { country: "サウジアラビア", speak: "聖句書き、つるぎを描いた。サウジアラビア", display: "聖句書き　剣を描いた　サウジアラビア", flag: "https://flagcdn.com/w320/sa.png" },
+  { country: "メキシコ", speak: "ワシがヘビ、くわえた伝説。メキシコ国旗", display: "ワシがヘビ　くわえた伝説　メキシコ国旗", flag: "https://flagcdn.com/w320/mx.png" },
+  { country: "ギリシャ", speak: "ギリシャ国旗、神話にもとづく、９本線", display: "ギリシャ国旗　神話にもどづく　９本線", flag: "https://flagcdn.com/w320/gr.png" },
+  { country: "アルゼンチン", speak: "真ん中に、太陽の顔。アルゼンチン", display: "真ん中に　太陽の顔　アルゼンチン", flag: "https://flagcdn.com/w320/ar.png" },
+  { country: "クロアチア", speak: "紅白の、チェック模様が、クロアチア", display: "紅白の　チェック模様が　クロアチア", flag: "https://flagcdn.com/w320/hr.png" },
+  { country: "キリバス", speak: "波と太陽、グンカンドリの、キリバス国旗", display: "波と太陽　グンカンドリの　キリバス国旗", flag: "https://flagcdn.com/w320/ki.png" },
+  { country: "アメリカ", speak: "星５０、州の数あらわす。アメリカ国旗", display: "星５０　州の数あらわす　アメリカ国旗", flag: "https://flagcdn.com/w320/us.png" },
+  { country: "フィジー", speak: "フィジーの、国旗に小さく、バナナあり", display: "フィジーの　国旗に小さく　バナナあり", flag: "https://flagcdn.com/w320/fj.png" },
+  { country: "ウクライナ", speak: "青空が、麦畑の上に。ウクライナ", display: "青空が　麦畑の上に　ウクライナ", flag: "https://flagcdn.com/w320/ua.png" },
+  { country: "フランス", speak: "たて３色、青・白・赤が、フランスだ", display: "縦３色　青白赤が　フランスだ", flag: "https://flagcdn.com/w320/fr.png" },
+  { country: "エクアドル", speak: "エクアドル、コンドルが飛ぶ、アンデスへ", display: "エクアドル　コンドルが飛ぶ　アンデスへ", flag: "https://flagcdn.com/w320/ec.png" },
+  { country: "パラオ", speak: "月の丸、太平洋に浮かぶ。パラオの国旗", display: "月の丸　太平洋に浮かぶ　パラオの国旗", flag: "https://flagcdn.com/w320/pw.png" },
+  { country: "スイス", speak: "白十字、スイスの国旗が、赤十字に", display: "白十字　スイスの国旗が　赤十字に", flag: "https://flagcdn.com/w320/ch.png" },
+  { country: "韓国", speak: "建国の、理想をこめた。韓国国旗", display: "建国の　理想をこめた　韓国国旗", flag: "https://flagcdn.com/w320/kr.png" },
+  { country: "ベルギー", speak: "ライオンの、紋章が始まり。ベルギー国旗", display: "ライオンの　紋章が始まり　ベルギー国旗", flag: "https://flagcdn.com/w320/be.png" },
+  { country: "オーストラリア", speak: "オーストラリア、コアラの国は、南十字せい", display: "オーストラリア　コアラの国は　南十字星", flag: "https://flagcdn.com/w320/au.png" },
+  { country: "スリランカ", speak: "スリランカ、国の名のもとは、ライオンだ", display: "スリランカ　国の名のもとは　ライオンだ", flag: "https://flagcdn.com/w320/lk.png" },
+  { country: "ブラジル", speak: "ブラジルの、緑は農業。黄色は資源", display: "ブラジルの　緑は農業　黄色は資源", flag: "https://flagcdn.com/w320/br.png" },
+  { country: "セーシェル", speak: "空と海、インド洋に浮かぶ。セーシェルだ", display: "空と海　インド洋に浮かぶ　セーシェルだ", flag: "https://flagcdn.com/w320/sc.png" },
+  { country: "カナダ", speak: "葉が赤く、染まるカエデの、カナダ国旗", display: "葉が赤く　染まるカエデの　カナダ国旗", flag: "https://flagcdn.com/w320/ca.png" },
+  { country: "ネパール", speak: "ネパールの、国旗は三角。月と日と", display: "ネパールの　国旗は三角　月と日と", flag: "https://flagcdn.com/w320/np.png" },
+  { country: "ルワンダ", speak: "ルワンダの、国旗は太陽。希望のしるし", display: "ルワンダの　国旗は太陽　希望のしるし", flag: "https://flagcdn.com/w320/rw.png" },
+  { country: "ノルウェー", speak: "ノルウェーは、北ヨーロッパ、十字架だ", display: "ノルウェーは　北ヨーロッパ　十字架だ", flag: "https://flagcdn.com/w320/no.png" },
+  { country: "オランダ", speak: "横３色、赤・白・青は、オランダだ", display: "横３色　赤白青は　オランダだ", flag: "https://flagcdn.com/w320/nl.png" },
+  { country: "ドイツ", speak: "三色の、統一ドイツ。黒・赤・きん", display: "三色の　統一ドイツ　黒赤金", flag: "https://flagcdn.com/w320/de.png" },
+  { country: "南アフリカ", speak: "黒い三角、南アで黒人、白人が", display: "黒い三角　南アで黒人　白人が", flag: "https://flagcdn.com/w320/za.png" },
+  { country: "グレナダ", speak: "ニクズクの、実がかわいいな。グレナダの", display: "ニクズクの　実がかわいいな　グレナダの", flag: "https://flagcdn.com/w320/gd.png" },
+  { country: "カンボジア", speak: "カンボジア、アンコールワットは、世界遺産", display: "カンボジア　アンコールワットは　世界遺産", flag: "https://flagcdn.com/w320/kh.png" },
+  { country: "ウルグアイ", speak: "ウルグアイ、９本線と、太陽と", display: "ウルグアイ　９本線と　太陽と", flag: "https://flagcdn.com/w320/uy.png" }
+];
+
+    let cards = [...originalCards];
 
     function readCard() {
-      const card = cards[Math.floor(Math.random() * cards.length)];
-      document.getElementById("card").textContent = card;
-      const utterance = new SpeechSynthesisUtterance(card);
+      if (cards.length === 0) {
+        document.getElementById("card").style.display = 'none';
+        document.getElementById("flag").style.display = 'none';
+        document.getElementById("readButton").style.display = 'none';
+        document.getElementById("repeatButton").style.display = 'inline-block';
+        document.getElementById("end").style.display = 'block';
+        return;
+      }
+
+      const index = Math.floor(Math.random() * cards.length);
+      const card = cards.splice(index, 1)[0];
+      document.getElementById("card").textContent = card.text;
+      const flagImg = document.getElementById("flag");
+      flagImg.src = card.flag;
+      flagImg.style.display = 'block';
+      const utterance = new SpeechSynthesisUtterance(card.speak);
       utterance.lang = "ja-JP";
+      utterance.pitch = 1.2;
+      utterance.rate = 0.95;
+      utterance.volume = 1;
       speechSynthesis.speak(utterance);
     }
-  </script>
+  function restartGame() {
+      cards = [...originalCards];
+      document.getElementById("card").style.display = 'block';
+      document.getElementById("readButton").style.display = 'inline-block';
+      document.getElementById("repeatButton").style.display = 'none';
+      document.getElementById("end").style.display = 'none';
+      document.getElementById("card").textContent = "ボタンを押してね！";
+      document.getElementById("flag").style.display = 'none';
+    }
+  let autoMode = false;
+
+function startAutoMode() {
+  autoMode = true;
+  document.getElementById("readButton").style.display = 'none';
+  document.getElementById("autoButton").style.display = 'none';
+  speakNextCard();
+}
+
+function speakNextCard() {
+  if (cards.length === 0) {
+    document.getElementById("card").style.display = 'none';
+    document.getElementById("flag").style.display = 'none';
+    document.getElementById("readButton").style.display = 'none';
+    document.getElementById("repeatButton").style.display = 'inline-block';
+    document.getElementById("end").style.display = 'block';
+    return;
+  }
+  const index = Math.floor(Math.random() * cards.length);
+  const card = cards.splice(index, 1)[0];
+  document.getElementById("card").textContent = card.display;
+  const flagImg = document.getElementById("flag");
+  flagImg.src = card.flag;
+  flagImg.style.display = 'block';
+  const utterance = new SpeechSynthesisUtterance(card.speak);
+  utterance.lang = "ja-JP";
+  utterance.pitch = 1.2;
+  utterance.rate = 0.95;
+  utterance.volume = 1;
+  utterance.onend = function() {
+    if (autoMode) {
+      setTimeout(speakNextCard, 4000);
+    }
+  };
+  speechSynthesis.speak(utterance);
+}
+</script>
 </body>
 </html>
