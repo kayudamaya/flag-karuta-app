@@ -65,12 +65,16 @@
   <div id="card">ボタンを押してね！</div>
   <img id="flag" src="" alt="国旗" style="display: none;">
   <button id="readButton" onclick="readCard()">▶ よむ！</button>
-  
+  <button id="autoButton" onclick="startAutoMode()" style="margin-left: 1em;">📢 ぜんぶよんで！</button>
+  
   <button id="pauseButton" onclick="pauseAutoMode()" style="margin-left: 1em; display: none;">⏸ 一時停止</button>
+  <button id="resumeButton" onclick="resumeAutoMode()" style="margin-left: 1em; display: none;">▶ 再開</button>
+  
   <div id="end">🎉 おしまい！ぜんぶの国旗を読んだよ！</div>
   <button id="repeatButton" onclick="restartGame()" style="display:none; margin-top: 1em;">🔁 もういちど！</button>
 
   <script>
+  // v3.2: 一時停止なし・自動読み上げあり・7秒間隔
     const originalCards = [
   { country: "スウェーデン", speak: "金十字、空に輝く。スウェーデン", display: "金十字　空に輝く　スウェーデン", flag: "https://flagcdn.com/w320/se.png" },
   { country: "イスラエル", speak: "むかしの王、ダビデの盾は、イスラエル", display: "昔の王　ダビデの盾は　イスラエル", flag: "https://flagcdn.com/w320/il.png" },
@@ -93,7 +97,7 @@
   { country: "ブータン", speak: "竜が抱く、たまが輝く。ブータン国旗", display: "竜が抱く　玉が輝く　ブータン国旗", flag: "https://flagcdn.com/w320/bt.png" },
   { country: "サウジアラビア", speak: "聖句書き、つるぎを描いた。サウジアラビア", display: "聖句書き　剣を描いた　サウジアラビア", flag: "https://flagcdn.com/w320/sa.png" },
   { country: "メキシコ", speak: "ワシがヘビ、くわえた伝説。メキシコ国旗", display: "ワシがヘビ　くわえた伝説　メキシコ国旗", flag: "https://flagcdn.com/w320/mx.png" },
-  { country: "ギリシャ", speak: "ギリシャ国旗、神話にもとづく、９本線", display: "ギリシャ国旗　神話にもどづく　９本線", flag: "https://flagcdn.com/w320/gr.png" },
+  { country: "ギリシャ", speak: "ギリシャ国旗、神話にもとづく、９本線", display: "ギリシャ国旗　神話にもとづく　９本線", flag: "https://flagcdn.com/w320/gr.png" },
   { country: "アルゼンチン", speak: "真ん中に、太陽の顔。アルゼンチン", display: "真ん中に　太陽の顔　アルゼンチン", flag: "https://flagcdn.com/w320/ar.png" },
   { country: "クロアチア", speak: "紅白の、チェック模様が、クロアチア", display: "紅白の　チェック模様が　クロアチア", flag: "https://flagcdn.com/w320/hr.png" },
   { country: "キリバス", speak: "波と太陽、グンカンドリの、キリバス国旗", display: "波と太陽　グンカンドリの　キリバス国旗", flag: "https://flagcdn.com/w320/ki.png" },
@@ -157,23 +161,35 @@
       document.getElementById("flag").style.display = 'none';
     }
   let autoMode = false;
-
 let isPaused = false;
 
 function startAutoMode() {
-  autoMode = true;
   isPaused = false;
-  document.getElementById("readButton").style.display = 'none';
+  autoMode = true;
+    document.getElementById("readButton").style.display = 'none';
   document.getElementById("autoButton").style.display = 'none';
   document.getElementById("pauseButton").style.display = 'inline-block';
-  speakNextCard();
+  document.getElementById("resumeButton").style.display = 'none';
+    speakNextCard();
 }
+
+
 
 function pauseAutoMode() {
   isPaused = true;
-  document.getElementById("pauseButton").style.display = 'none';
-  document.getElementById("autoButton").style.display = 'inline-block';
   autoMode = false;
+  document.getElementById("pauseButton").style.display = 'none';
+  document.getElementById("resumeButton").style.display = 'inline-block';
+}
+
+function resumeAutoMode() {
+  if (isPaused) {
+    autoMode = true;
+    isPaused = false;
+    document.getElementById("pauseButton").style.display = 'inline-block';
+    document.getElementById("resumeButton").style.display = 'none';
+    speakNextCard();
+  }
 }
 
 function speakNextCard() {
