@@ -186,7 +186,7 @@ function speakNextCard() {
   utterance.volume = 1;
   utterance.onend = function() {
     if (autoMode) {
-      setTimeout(speakNextCard, 4000);
+      setTimeout(speakNextCard, 8000);
     }
   };
   speechSynthesis.speak(utterance);
