@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>世界の国旗かるた</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #f0f8ff;
+      padding: 2em;
+    }
+    #card {
+      font-size: 2em;
+      margin: 1em;
+      padding: 1em;
+      border: 3px solid #333;
+      background: #fff;
+      border-radius: 15px;
+      min-height: 3em;
+    }
+    button {
+      font-size: 1.5em;
+      padding: 0.5em 1.5em;
+      border-radius: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>世界の国旗かるた 読み人</h1>
+  <div id="card">ボタンを押してね！</div>
+  <button onclick="readCard()">よむ！</button>
+
+  <script>
+    const cards = [
+      "金十字　空に輝く　スウェーデン",
+      "むかしの王　ダビデの盾は　イスラエル",
+      "緑白赤　このたて３色が　イタリアだ",
+      "ロシア国旗　オランダ国旗が　もとになり",
+      "レバノン杉　船を作って　地中海へ",
+      "天からの　十字旗が舞う　デンマーク",
+      "日の丸は　日本の国旗　日が昇る",
+      "トルコ国旗　月 星 輝く　イスラムの",
+      "モンゴルの　民族模様は　自由のしるし",
+      "槍と盾　ケニアの独立　守りぬく",
+      "中国の　赤い国旗は　星五つ",
+      "沼と湖　真っ白い雪　フィンランド",
+      "バーレーンは　ギザギザ模様で　あざやかに",
+      "パプアでは　ゴクラクチョウが　飛んでいる",
+      "目立つ赤　オーストリアは　音楽の国",
+      "雪がふる　アンデスの山　チリ国旗",
+      "ヘラクレスの　柱がたってる　スペイン国旗",
+      "イギリスは　３つの旗が　合わさった",
+      "竜が抱く　玉が輝く　ブータン国旗",
+      "聖句書き　剣を描いた　サウジアラビア",
+      "ワシがヘビ　くわえた伝説　メキシコ国旗",
+      "ギリシャ国旗　神話にもどづく　９本線",
+      "真ん中に　太陽の顔　アルゼンチン",
+      "紅白の　チェック模様が　クロアチア",
+      "波と太陽　グンカンドリの　キリバス国旗",
+      "星５０　州の数あらわす　アメリカ国旗",
+      "フィジーの　国旗に小さく　バナナあり",
+      "青空が　麦畑の上に　ウクライナ",
+      "たて３色　青白赤が　フランスだ",
+      "エクアドル　コンドルが飛ぶ　アンデスへ",
+      "月の丸　太平洋に浮かぶ　パラオの国旗",
+      "白十字　スイスの国旗が　赤十字に",
+      "建国の　理想をこめた　韓国国旗",
+      "ライオンの　紋章が始まり　ベルギー国旗",
+      "オーストラリア　コアラの国は　南十字星",
+      "スリランカ　国の名のもとは　ライオンだ",
+      "ブラジルの　緑は農業　黄色は資源",
+      "空と海　インド洋に浮かぶ　セーシェルだ",
+      "葉が赤く　染まるカエデの　カナダ国旗",
+      "ネパールの　国旗は三角　月と日と",
+      "ルワンダの　国旗は太陽　希望のしるし",
+      "ノルウェーは　北ヨーロッパ　十字架だ",
+      "横３色　赤白青は　オランダだ",
+      "三色の　統一ドイツ　黒赤金",
+      "黒い三角　南アで黒人　白人が",
+      "ニクズクの　実がかわいいな　グレナダの",
+      "カンボジア　アンコールワットは　世界遺産",
+      "ウルグアイ　９本線と　太陽と"
+    ];
+
+    function readCard() {
+      const card = cards[Math.floor(Math.random() * cards.length)];
+      document.getElementById("card").textContent = card;
+      const utterance = new SpeechSynthesisUtterance(card);
+      utterance.lang = "ja-JP";
+      speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
